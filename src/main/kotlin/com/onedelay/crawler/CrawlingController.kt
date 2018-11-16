@@ -1,18 +1,14 @@
 package com.onedelay.crawler
 
 import org.jsoup.Jsoup
-import org.springframework.ui.Model
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.ResponseBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class CrawlingController {
 
-    @GetMapping("/daum/{category}")
+    @GetMapping("/daum")
     @ResponseBody
-    fun getDaumNews(@PathVariable(value = "category") category: String): List<News> {
+    fun getDaumNews(@RequestParam(value = "category") category: String): List<News> {
         var count = 0 // 가장 많이본 뉴스 3개만 가져오도록 카운트
         val list = ArrayList<News>()
 
@@ -44,9 +40,9 @@ class CrawlingController {
         return list
     }
 
-    @GetMapping("/naver/{category}")
+    @GetMapping("/naver")
     @ResponseBody
-    fun getNaverNews(@PathVariable(value = "category") category: String): List<News> {
+    fun getNaverNews(@RequestParam(value = "category") category: String): List<News> {
         var count = 0
         val list = ArrayList<News>()
 
