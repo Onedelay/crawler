@@ -85,4 +85,20 @@ class CrawlingController {
         }
         return list
     }
+
+    @GetMapping("/naver_issue")
+    @ResponseBody
+    fun getNaverHotIssue(): List<HotIssue> {
+        val list = ArrayList<HotIssue>()
+
+        val doc = Jsoup.connect("https://www.naver.com/").get()
+        val elements = doc.select("div.ah_list.PM_CL_realtimeKeyword_list_base")[0].selectFirst("ul.ah_l").children()
+        for ((i, element) in elements.withIndex()) {
+            val name = element.selectFirst("span.ah_k").text()
+            val url = element.selectFirst("a").attr("href")
+            list.add(HotIssue(i + 1, name, url))
+        }
+
+        return list
+    }
 }
