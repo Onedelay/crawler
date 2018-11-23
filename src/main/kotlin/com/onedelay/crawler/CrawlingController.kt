@@ -70,4 +70,19 @@ class CrawlingController {
 
         return list
     }
+
+    @GetMapping("/daum_issue")
+    @ResponseBody
+    fun getDaumHotIsuue(): List<HotIssue> {
+        val list = ArrayList<HotIssue>()
+
+        val doc = Jsoup.connect("https://www.daum.net/").get()
+        val elements = doc.select("div.hotissue_mini").select("ol")[0].children()
+        for ((i, element) in elements.withIndex()) {
+            val name = element.selectFirst("a").text()
+            val url = element.selectFirst("a").attr("href")
+            list.add(HotIssue(i + 1, name, url))
+        }
+        return list
+    }
 }
