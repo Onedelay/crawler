@@ -6,3 +6,7 @@ data class News(val category: String,
                 val url: String,
                 val content: String,
                 val img: String)
+
+data class HotIssue(val rank: Int,
+                    val name: String,
+                    val url: String)
