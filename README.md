@@ -1,10 +1,8 @@
 ## 크롤러서버
 
-<br>
+Spring boot를 이용한 간단한 크롤러 서버
 
-Spring boot 프레임워크를 사용한 간단한 크롤러 서버
-
-kotlin으로 작성되었음
+네이버, 다음 포털의 실시간 검색어와 뉴스 목록을 크롤링한다.
 
 <br>
 
@@ -19,8 +17,10 @@ kotlin으로 작성되었음
 - 네이버 : "정치", "경제", "사회", "생활/문화", "세계", "IT/과학"
 - 다음 : "뉴스", "연예", "스포츠"
 
-1. 네이버 뉴스 : https://onedelay-crawler-server.herokuapp.com/naver/{category}
-2. 다음 뉴스 : https://onedelay-crawler-server.herokuapp.com/daum{category}
+1. 네이버 뉴스 : https://onedelay-crawler-server.herokuapp.com/naver?category=
+2. 다음 뉴스 : https://onedelay-crawler-server.herokuapp.com/daumcategory=
+3. 네이버 실시간 검색어 : https://onedelay-crawler-server.herokuapp.com/naver_issue
+4. 다음 실시간 검색어 : https://onedelay-crawler-server.herokuapp.com/daum_issue
 
 <br>
 
