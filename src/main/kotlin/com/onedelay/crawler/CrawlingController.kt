@@ -42,7 +42,7 @@ class CrawlingController {
 
     @GetMapping("/naver")
     @ResponseBody
-    fun getNaverNews(@RequestParam(value = "category") category: String): List<News> {
+    fun getNaverNews(@RequestParam(value = "category") category: String?): List<News> {
         var count = 0
         val list = ArrayList<News>()
 
@@ -97,6 +97,40 @@ class CrawlingController {
             val name = element.selectFirst("span.ah_k").text()
             val url = element.selectFirst("a").attr("href")
             list.add(HotIssue(i + 1, name, url))
+        }
+
+        return list
+    }
+
+    @GetMapping("/android_weekly")
+    @ResponseBody
+    fun getAndroidWeekly(@RequestParam("count", required = false) count: Int?): List<WeeklyItem> {
+        val list = mutableListOf<WeeklyItem>()
+
+        val doc = Jsoup.connect("https://androidweekly.net/").get()
+
+        val elements = doc.select("div.sections")[0].children()
+
+        var remainCount = count ?: 13
+
+        for (element in elements) {
+            if (remainCount > 0) {
+                try {
+                    list.add(
+                            WeeklyItem(
+                                    headline = element.selectFirst("a.article-headline").text(),
+                                    contents = element.selectFirst("p").text(),
+                                    url = element.selectFirst("a.article-headline").attr("href")
+                            )
+                    )
+
+                    remainCount--
+                } catch (exception: NullPointerException) {
+                    continue
+                }
+            } else {
+                break
+            }
         }
 
         return list

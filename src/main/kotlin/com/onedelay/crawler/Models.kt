@@ -10,3 +10,7 @@ data class News(val category: String,
 data class HotIssue(val rank: Int,
                     val name: String,
                     val url: String)
+
+data class WeeklyItem(val headline: String,
+                      val contents: String,
+                      val url: String)
