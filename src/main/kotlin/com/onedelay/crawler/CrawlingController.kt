@@ -86,6 +86,24 @@ class CrawlingController {
         return list
     }
 
+    @GetMapping("/naver_issue")
+    @ResponseBody
+    fun getNaverHotIssue(): List<HotIssue> {
+        val list = ArrayList<HotIssue>()
+
+        val doc = Jsoup.connect("https://datalab.naver.com/keyword/realtimeList.naver?where=main/").get()
+        val elements = doc.select("div.ranking_box")[0].selectFirst("ul.ranking_list").children()
+
+        for ((i, element) in elements.withIndex()) {
+            val name = element.selectFirst("span.item_title").text()
+            val url = "https://search.naver.com/search.naver?where=nexearch&query=${name}"
+
+            list.add(HotIssue(i + 1, name, url))
+        }
+
+        return list
+    }
+
     @GetMapping("/android_weekly")
     @ResponseBody
     fun getAndroidWeekly(@RequestParam("count", required = false) count: Int?): List<WeeklyItem> {
