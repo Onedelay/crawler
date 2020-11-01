@@ -74,8 +74,8 @@ class CrawlingController {
 
     @GetMapping("/naver_issue")
     @ResponseBody
-    fun getNaverHotIssue(): List<HotIssue> {
-        val list = ArrayList<HotIssue>()
+    fun getNaverHotIssue(): List<NaverHotIssue> {
+        val list = ArrayList<NaverHotIssue>()
 
         val doc = Jsoup.connect("https://datalab.naver.com/keyword/realtimeList.naver?where=main/").get()
         val elements = doc.select("div.ranking_box")[0].selectFirst("ul.ranking_list").children()
@@ -84,41 +84,34 @@ class CrawlingController {
             val name = element.selectFirst("span.item_title").text()
             val url = "https://search.naver.com/search.naver?where=nexearch&query=${name}"
 
-            list.add(HotIssue(i + 1, name, url))
+            list.add(NaverHotIssue(i + 1, name, url))
         }
 
         return list
     }
 
-    // fixme
     @GetMapping("/android_weekly")
     @ResponseBody
-    fun getAndroidWeekly(@RequestParam("count", required = false) count: Int?): List<WeeklyItem> {
-        val list = mutableListOf<WeeklyItem>()
+    fun getAndroidWeekly(): List<AndroidWeekly> {
+        val list = mutableListOf<AndroidWeekly>()
 
         val doc = Jsoup.connect("https://androidweekly.net/").get()
 
-        val elements = doc.select("div.sections")[0].children()
-
-        var remainCount = count ?: 13
+        val elements = doc.selectFirst("div.sections").children()
 
         for (element in elements) {
-            if (remainCount > 0) {
-                try {
-                    list.add(
-                            WeeklyItem(
-                                    headline = element.selectFirst("a.article-headline").text(),
-                                    contents = element.selectFirst("p").text(),
-                                    url = element.selectFirst("a.article-headline").attr("href")
-                            )
-                    )
+            if (element.selectFirst("h2")?.text() == "Place a sponsored post") break
 
-                    remainCount--
-                } catch (exception: NullPointerException) {
-                    continue
-                }
-            } else {
-                break
+            val link = element.select("a")
+
+            if (link.text().isNotEmpty()) {
+                list.add(
+                        AndroidWeekly(
+                                headline = link.text(),
+                                contents = element.select("p").text(),
+                                url = link.attr("href")
+                        )
+                )
             }
         }
 

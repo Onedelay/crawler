@@ -15,10 +15,14 @@ data class NaverNews(
         val title: String
 )
 
-data class HotIssue(val rank: Int,
-                    val name: String,
-                    val url: String)
+data class NaverHotIssue(
+        val rank: Int,
+        val name: String,
+        val url: String
+)
 
-data class WeeklyItem(val headline: String,
-                      val contents: String,
-                      val url: String)
+data class AndroidWeekly(
+        val headline: String,
+        val contents: String,
+        val url: String
+)
