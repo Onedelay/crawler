@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class CrawlingController {
 
+    // fixme
     @GetMapping("/daum")
     @ResponseBody
     fun getDaumNews(@RequestParam(value = "category") category: String): List<News> {
@@ -40,6 +41,7 @@ class CrawlingController {
         return list
     }
 
+    // fixme
     @GetMapping("/naver")
     @ResponseBody
     fun getNaverNews(@RequestParam(value = "category") category: String?): List<News> {
@@ -71,21 +73,6 @@ class CrawlingController {
         return list
     }
 
-    @GetMapping("/daum_issue")
-    @ResponseBody
-    fun getDaumHotIsuue(): List<HotIssue> {
-        val list = ArrayList<HotIssue>()
-
-        val doc = Jsoup.connect("https://www.daum.net/").get()
-        val elements = doc.select("div.hotissue_mini").select("ol")[0].children()
-        for ((i, element) in elements.withIndex()) {
-            val name = element.selectFirst("a").text()
-            val url = element.selectFirst("a").attr("href")
-            list.add(HotIssue(i + 1, name, url))
-        }
-        return list
-    }
-
     @GetMapping("/naver_issue")
     @ResponseBody
     fun getNaverHotIssue(): List<HotIssue> {
@@ -104,6 +91,7 @@ class CrawlingController {
         return list
     }
 
+    // fixme
     @GetMapping("/android_weekly")
     @ResponseBody
     fun getAndroidWeekly(@RequestParam("count", required = false) count: Int?): List<WeeklyItem> {
