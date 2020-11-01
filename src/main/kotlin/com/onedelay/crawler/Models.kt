@@ -10,9 +10,8 @@ data class DaumNews(
 )
 
 data class NaverNews(
-        val rank: Int,
-        val url: String,
         val category: String,
+        val url: String,
         val title: String
 )
 

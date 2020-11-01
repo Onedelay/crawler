@@ -38,32 +38,34 @@ class CrawlingController {
         return list
     }
 
-    // fixme
     @GetMapping("/naver")
     @ResponseBody
-    fun getNaverNews(@RequestParam(value = "category") category: String?): List<News> {
-        var count = 0
-        val list = ArrayList<News>()
+    fun getNaverNews(): List<NaverNews> {
+        val list = ArrayList<NaverNews>()
 
-        val doc = Jsoup.connect("https://news.naver.com/").get()
-        val elements = doc.select("ul.section_list_ranking")
-        for (element in elements) {
-            val cat = element.parents()[0].select("h5").text()
-            if (category == cat) {
-                for ((j, child) in element.children().withIndex()) {
-                    val title = child.select("a").attr("title")
-                    val url = "https://news.naver.com/" + child.select("a").attr("href")
-                    val content by lazy {
-                        if (count++ < 4) {
-                            // 해당 url 클릭해서 내용 일부 발췌
-                            // 3개까지만 실행하도록 분기 (너무 오래 걸림)
-                            Jsoup.connect(url).get().select("meta[property=og:description]").attr("content")
-                        } else {
-                            ""
-                        }
-                    }
-                    list.add(News(cat, j + 1, title, url, content, "https://t1.daumcdn.net/cfile/tistory/2212C6335790D35004"))
+        val doc = Jsoup.connect("https://news.naver.com/main/home.nhn").get()
+
+        val sections = doc.selectFirst("div.main_content_inner._content_inner")
+                .select("div.main_component.droppable")
+
+        for (section in sections) {
+            val category = section.select("div.com_header").select("a").text().split(' ')
+
+            val categoryName = if (category.isNotEmpty()) category[0] else ""
+
+            for (news in section.select("li")) {
+                val link = news.select("a")
+
+                val href = link.attr("href")
+                val url = if (href.contains("https://news.naver.com/")) {
+                    href
+                } else {
+                    "https://news.naver.com$href"
                 }
+
+                val title = link.text()
+
+                list.add(NaverNews(categoryName, url, title))
             }
         }
 
