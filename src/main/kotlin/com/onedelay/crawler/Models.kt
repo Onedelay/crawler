@@ -1,11 +1,20 @@
 package com.onedelay.crawler
 
-data class News(val category: String,
-                val rank: Int,
-                val name: String,
-                val url: String,
-                val content: String,
-                val img: String)
+data class DaumNews(
+        val rank: Int,
+        val url: String,
+        val title: String,
+        val thumbContent: String,
+        val thumbImageUrl: String,
+        val company: String
+)
+
+data class NaverNews(
+        val rank: Int,
+        val url: String,
+        val category: String,
+        val title: String
+)
 
 data class HotIssue(val rank: Int,
                     val name: String,

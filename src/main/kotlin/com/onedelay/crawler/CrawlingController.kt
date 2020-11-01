@@ -6,36 +6,33 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class CrawlingController {
 
-    // fixme
     @GetMapping("/daum")
     @ResponseBody
-    fun getDaumNews(@RequestParam(value = "category") category: String): List<News> {
-        var count = 0 // 가장 많이본 뉴스 3개만 가져오도록 카운트
-        val list = ArrayList<News>()
+    fun getDaumNews(): List<DaumNews> {
+        val list = ArrayList<DaumNews>()
 
-        val doc = Jsoup.connect("https://media.daum.net/society/").get()
-        val element = doc.select("div.aside_g.aside_ranking").select("ul.tab_aside.tab_media")[0]
-        for (item in element.children()) {
-            val cat = item.select("a.link_tab").text()
-            if (category == cat) {
-                val ch = item.select("ol.list_ranking")
-                for ((i, child) in ch.withIndex()) {
-                    for ((j, c) in child.children().withIndex()) {
-                        val title = c.select("strong.tit_g").select("a").text().trim()
-                        val url = c.select("strong.tit_g").select("a").attr("href")
-                        val content by lazy {
-                            if (count++ < 4) {
-                                // 해당 url 에서 내용 일부 발췌
-                                // 3개까지만 실행하도록 분기 (너무 오래 걸림)
-                                Jsoup.connect(url).get().select("meta[property=og:description]").attr("content")
-                            } else {
-                                ""
-                            }
-                        }
-                        list.add(News(cat, (i * 10) + (j + 1), title, url, content, "https://t1.daumcdn.net/daumtop_chanel/op/20170315064553027.png"))
-                    }
-                }
-            }
+        val doc = Jsoup.connect("https://news.daum.net/ranking/popular/").get()
+
+        val elements = doc.select("div.rank_news")[0].selectFirst("ul.list_news2").children()
+
+        for ((i, element) in elements.withIndex()) {
+            val link = element.select("a").first()
+            val url = link.attr("href")
+            val title = link.select("img").attr("alt")
+            val thumbContent = element.select("span.link_txt").text()
+            val thumbImageUrl = element.select("img").attr("src")
+            val company = element.select("span.info_news").text()
+
+            list.add(
+                    DaumNews(
+                            rank = i + 1,
+                            url = url,
+                            title = title,
+                            thumbContent = thumbContent,
+                            thumbImageUrl = thumbImageUrl,
+                            company = company
+                    )
+            )
         }
 
         return list
