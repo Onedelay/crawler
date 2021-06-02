@@ -15,7 +15,7 @@ jobs:
     steps:
      - name: Android Weekly Crawl Request
        id: crawlAndroidWeekly
-       uses: fjogeleit/http-request-action@v1.8.0
+       uses: fjogeleit/http-request-action@master
        with:
         url: 'https://onedelay-crawler-server.herokuapp.com/android_weekly'
         method: 'GET'
