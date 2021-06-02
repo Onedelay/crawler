@@ -1,0 +1,22 @@
+# This is a basic workflow to help you get started with Actions
+
+name: HTTP Request Action
+
+on:
+  schedule:
+    - cron: 0 0 * * 1
+  
+  push:
+    branches: [ master ]
+  
+jobs:
+  crawl:
+    runs-on: ubuntu-latest
+    steps:
+     - name: Android Weekly Crawl Request
+       id: crawlAndroidWeekly
+       uses: fjogeleit/http-request-action@v1.8.0
+       with:
+        url: 'https://onedelay-crawler-server.herokuapp.com/android_weekly'
+        method: 'GET'
+     - run: echo ${{ steps.crawlAndroidWeekly.outputs.response }}
