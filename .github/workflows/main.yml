@@ -19,4 +19,5 @@ jobs:
        with:
         url: 'https://onedelay-crawler-server.herokuapp.com/android_weekly'
         method: 'GET'
+        timeout: '15000'
      - run: echo ${{ steps.crawlAndroidWeekly.outputs.response }}
